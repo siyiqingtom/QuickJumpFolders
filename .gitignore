@@ -1,0 +1,39 @@
+# Build output
+build/
+*.obj
+*.exe
+*.dll
+*.lib
+*.exp
+*.pdb
+*.ilk
+
+# Editor / IDE
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Visual Studio temp
+*.tlog
+ipch/
+Debug/
+Release/
+x64/
+x86/
+
+# OS
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Local logs / runtime artifacts
+log.txt
+*.log
+
+# Personal config (user-specific watch_dirs.txt belongs in build/)
+build/watch_dirs.txt
+
+# Packaging output (release zips and staging dirs) — DO commit dist/使用说明.txt
+dist/smart_upload-*/
+dist/*.zip

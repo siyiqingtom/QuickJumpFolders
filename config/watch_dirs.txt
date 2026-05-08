@@ -1,0 +1,15 @@
+# smart_upload 监控目录配置文件
+# 每行一个目录，要求是绝对路径（支持中文）
+# 以 # 开头的行是注释，会被忽略
+#
+# 修改这个文件后，右键托盘图标 → 重载配置 即可生效
+
+# === 在下面写你想监控的目录，把示例改成自己的路径即可 ===
+
+D:\Work
+D:\Projects
+
+# 也可以监控桌面、文档、下载等
+# C:\Users\Administrator\Desktop
+# C:\Users\Administrator\Documents
+# C:\Users\Administrator\Downloads
