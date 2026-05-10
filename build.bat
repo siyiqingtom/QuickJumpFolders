@@ -1,6 +1,6 @@
 @echo off
 rem ============================================================
-rem  smart_upload one-click build script
+rem  QuickJumpFolders one-click build script
 rem
 rem  Looks for a C++ compiler in this order:
 rem    1. cl.exe already in PATH (current shell has VS env)
@@ -14,7 +14,7 @@ setlocal enabledelayedexpansion
 cd /d "%~dp0"
 
 echo ============================================================
-echo  smart_upload build
+echo  QuickJumpFolders build
 echo ============================================================
 echo.
 

@@ -22,7 +22,7 @@ Whenever you create / modify / rename a file inside them, it updates a couple of
 1. **Watcher thread**  
    Uses `ReadDirectoryChangesW` to recursively watch your configured roots, capturing file create / delete / rename / modify events and filtering out noisy Office lock files, browser temp files, etc.  
 2. **Shortcut manager**  
-   Maintains a `latest.lnk` inside two fixed container directories (`%USERPROFILE%\smart_upload_latest` and `%USERPROFILE%\smart_upload_latest2`). Whenever the tracked directory changes, it rewrites both `.lnk` files to point to the most recently touched folder.  
+   Maintains a `latest.lnk` inside two fixed container directories (`%USERPROFILE%\QuickJumpFolders_latest` and `%USERPROFILE%\QuickJumpFolders_latest2`). Whenever the tracked directory changes, it rewrites both `.lnk` files to point to the most recently touched folder.  
 3. **One-time setup**  
    You drag these two container directories into Windows Explorer’s “Quick access” sidebar. The pins stay there forever, but the `latest.lnk` inside always points at the most recently modified folder.  
 4. **Daily flow**  
@@ -86,8 +86,8 @@ A tray icon appears in the system tray (bottom‑right). Right‑click it for:
 On startup, the tray log prints a `[HINT]` line with the two container paths, for example:
 
 ```text
-C:\Users\you\smart_upload_latest
-C:\Users\you\smart_upload_latest2
+C:\Users\you\QuickJumpFolders_latest
+C:\Users\you\QuickJumpFolders_latest2
 ```
 
 Open Explorer, navigate to these folders, and **drag each of them into the “Quick access” sidebar** on the left.  
@@ -167,7 +167,7 @@ MIT — see [LICENSE](LICENSE).
 1. **目录监控线程**  
    使用 `ReadDirectoryChangesW` 递归监控你配置的根目录，实时捕捉文件的创建 / 删除 / 重命名 / 修改事件，并过滤掉 Office 锁文件、浏览器临时文件等噪声。  
 2. **快捷方式管理**  
-   在 `%USERPROFILE%\smart_upload_latest` 和 `%USERPROFILE%\smart_upload_latest2` 两个固定容器目录里维护 `latest.lnk`。每当目标目录变化，就重写这两个 `.lnk`，让它们始终指向“最近一次真正被你操作过的目录”。  
+   在 `%USERPROFILE%\QuickJumpFolders_latest` 和 `%USERPROFILE%\QuickJumpFolders_latest2` 两个固定容器目录里维护 `latest.lnk`。每当目标目录变化，就重写这两个 `.lnk`，让它们始终指向“最近一次真正被你操作过的目录”。  
 3. **一次性配置**  
    你只需把这两个容器目录拖到资源管理器左侧的“快速访问”。Pin 会一直存在，但里面的 `latest.lnk` 会不断被更新。  
 4. **日常使用**  
@@ -235,8 +235,8 @@ D:\项目
 程序启动时，托盘日志中会有一行 `[HINT]`，告诉你两个容器目录的路径，例如：
 
 ```text
-C:\Users\你\smart_upload_latest
-C:\Users\你\smart_upload_latest2
+C:\Users\你\QuickJumpFolders_latest
+C:\Users\你\QuickJumpFolders_latest2
 ```
 
 打开资源管理器，找到这两个目录，**分别拖到左侧“快速访问”区域**。  

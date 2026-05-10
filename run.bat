@@ -1,6 +1,6 @@
 @echo off
 rem ============================================================
-rem  smart_upload launcher (Quick Access pin approach)
+rem  QuickJumpFolders launcher (Quick Access pin approach)
 rem
 rem  This launcher starts ONLY the watcher. The watcher itself
 rem  pins the latest changed folder to "Quick access" via Shell

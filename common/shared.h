@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace smart_upload {
+namespace QuickJumpFolders {
 
 // File-name prefixes to ignore: Office lock files, system noise, etc.
 inline const std::vector<std::wstring>& GetIgnorePrefixes() {
@@ -65,4 +65,4 @@ inline std::wstring GetFileName(const std::wstring& fullPath) {
     return fullPath.substr(pos + 1);
 }
 
-} // namespace smart_upload
+} // namespace QuickJumpFolders

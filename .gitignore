@@ -35,5 +35,6 @@ log.txt
 build/watch_dirs.txt
 
 # Packaging output (release zips and staging dirs) — DO commit dist/使用说明.txt
+dist/QuickJumpFolders-*/
 dist/smart_upload-*/
 dist/*.zip

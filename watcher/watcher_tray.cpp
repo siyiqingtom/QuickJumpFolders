@@ -33,7 +33,7 @@
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
-using namespace smart_upload;
+using namespace QuickJumpFolders;
 
 // ============ 全局状态 ============
 constexpr UINT WM_TRAYICON       = WM_USER + 100;
@@ -108,14 +108,14 @@ static void UpdateLastChangedDir(const std::wstring& dir) {
 // ============ 容器目录 + .lnk 快捷方式管理 ============
 //
 // 思路：在用户 profile 下放一个或多个固定的"容器目录"（默认两个：
-// %USERPROFILE%\smart_upload_latest 和 ...latest2）。每次 watcher 检测
+// %USERPROFILE%\QuickJumpFolders_latest 和 ...latest2）。每次 watcher 检测
 // 到目录变化时，把每个容器里的 latest.lnk 重写成指向最新目录。
 //
 // 用户的一次性配置：把容器目录拖到资源管理器左侧"快速访问"。
 // 之后点开容器目录 → 双击 latest.lnk → 进入真实的最新目录路径，
 // 路径栏显示的是真实路径，向上导航能正常工作（这是 junction 做不到的）。
 //
-// 持久化：g_lastPinnedDir 写到 %APPDATA%\smart_upload\last_pinned.txt，
+// 持久化：g_lastPinnedDir 写到 %APPDATA%\QuickJumpFolders\last_pinned.txt，
 // 仅作日志/状态记录用，不参与去重逻辑。
 
 static std::wstring GetPinStateFilePath() {
@@ -124,7 +124,7 @@ static std::wstring GetPinStateFilePath() {
         return L"";
     }
     std::wstring dir = buf;
-    dir += L"\\smart_upload";
+    dir += L"\\QuickJumpFolders";
     CreateDirectoryW(dir.c_str(), nullptr);  // 已存在会返回 ERROR_ALREADY_EXISTS，无视
     return dir + L"\\last_pinned.txt";
 }
@@ -168,7 +168,7 @@ static void SaveLastPinnedDir(const std::wstring& dir) {
 // ============ 快捷方式（.lnk）方案 ============
 //
 // 用 IShellLink 在固定容器目录里维护一个 .lnk，用户体验：
-//   1) 容器目录 %USERPROFILE%\smart_upload_latest 是个普通文件夹
+//   1) 容器目录 %USERPROFILE%\QuickJumpFolders_latest 是个普通文件夹
 //   2) 用户手动把它拖到"快速访问"（一次性）
 //   3) 容器里只有一个 "最新修改.lnk"，watcher 每次重写它指向最新目录
 // 用户点 QA → 进容器 → 双击快捷方式 → 进真实目标路径（"上一级"按钮能正常工作，
@@ -183,8 +183,8 @@ static std::vector<std::wstring> GetContainerDirPaths() {
     }
     std::wstring profile = buf;
     return {
-        profile + L"\\smart_upload_latest",
-        profile + L"\\smart_upload_latest2",
+        profile + L"\\QuickJumpFolders_latest",
+        profile + L"\\QuickJumpFolders_latest2",
     };
 }
 
@@ -240,7 +240,7 @@ static bool CreateOrUpdateShortcut(const std::wstring& lnkPath,
     if (SUCCEEDED(hr) && psl) {
         psl->SetPath(targetPath.c_str());
         psl->SetWorkingDirectory(targetPath.c_str());
-        psl->SetDescription(L"smart_upload - 最近修改的目录");
+        psl->SetDescription(L"QuickJumpFolders - 最近修改的目录");
 
         IPersistFile* ppf = nullptr;
         hr = psl->QueryInterface(IID_PPV_ARGS(&ppf));
@@ -264,7 +264,7 @@ static bool CreateOrUpdateShortcut(const std::wstring& lnkPath,
 
 // 更新"最新目录"——通过更新容器目录里的 .lnk 快捷方式实现。
 //
-// 用户需要做的一次性配置：手动把 %USERPROFILE%\smart_upload_latest 拖进
+// 用户需要做的一次性配置：手动把 %USERPROFILE%\QuickJumpFolders_latest 拖进
 // 文件资源管理器的"快速访问"。点开后里面会有一个 latest.lnk，
 // 双击进入真实路径，向上导航能正常回到真实父目录。
 //
@@ -497,14 +497,14 @@ static void ShowLogWindow() {
     WNDCLASSW wc = {};
     wc.lpfnWndProc = LogWndProc;
     wc.hInstance = GetModuleHandleW(nullptr);
-    wc.lpszClassName = L"SmartUploadLogWnd";
+    wc.lpszClassName = L"QuickJumpFoldersLogWnd";
     wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
     static bool reg = false;
     if (!reg) { RegisterClassW(&wc); reg = true; }
 
     g_hLogWnd = CreateWindowExW(
-        0, L"SmartUploadLogWnd", L"smart_upload —— 实时日志",
+        0, L"QuickJumpFoldersLogWnd", L"QuickJumpFolders —— 实时日志",
         WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 900, 500,
         nullptr, nullptr, GetModuleHandleW(nullptr), nullptr);
 
@@ -661,10 +661,10 @@ static void ParseCmdLine() {
 // ============ WinMain ============
 int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, int) {
     // 防止多开
-    HANDLE hMutex = CreateMutexW(nullptr, TRUE, L"Global\\smart_upload_watcher_mutex");
+    HANDLE hMutex = CreateMutexW(nullptr, TRUE, L"Global\\QuickJumpFolders_watcher_mutex");
     if (GetLastError() == ERROR_ALREADY_EXISTS) {
-        MessageBoxW(nullptr, L"smart_upload watcher 已经在运行中。",
-                    L"smart_upload", MB_ICONINFORMATION);
+        MessageBoxW(nullptr, L"QuickJumpFolders watcher 已经在运行中。",
+                    L"QuickJumpFolders", MB_ICONINFORMATION);
         return 0;
     }
 
@@ -680,10 +680,10 @@ int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, int) {
     WNDCLASSW wc = {};
     wc.lpfnWndProc = MainWndProc;
     wc.hInstance = hInst;
-    wc.lpszClassName = L"SmartUploadMainWnd";
+    wc.lpszClassName = L"QuickJumpFoldersMainWnd";
     RegisterClassW(&wc);
 
-    g_hMainWnd = CreateWindowExW(0, L"SmartUploadMainWnd", L"smart_upload",
+    g_hMainWnd = CreateWindowExW(0, L"QuickJumpFoldersMainWnd", L"QuickJumpFolders",
                                  0, 0, 0, 0, 0, HWND_MESSAGE, nullptr, hInst, nullptr);
 
     // 创建托盘图标
@@ -693,7 +693,7 @@ int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, int) {
     g_nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
     g_nid.uCallbackMessage = WM_TRAYICON;
     g_nid.hIcon = LoadIcon(nullptr, IDI_APPLICATION);  // 用系统默认图标，省事
-    wcscpy_s(g_nid.szTip, L"smart_upload 文件监控（双击查看日志）");
+    wcscpy_s(g_nid.szTip, L"QuickJumpFolders 文件监控（双击查看日志）");
     Shell_NotifyIconW(NIM_ADD, &g_nid);
 
     // 启动监控
@@ -701,7 +701,7 @@ int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, int) {
     if (dirs.empty()) {
         MessageBoxW(nullptr,
                     L"没有指定任何监控目录。\n\n请用 -d 参数或编辑配置文件 watch_dirs.txt",
-                    L"smart_upload", MB_ICONWARNING);
+                    L"QuickJumpFolders", MB_ICONWARNING);
     } else {
         StartWatchers(dirs);
         Logf(L"INFO", L"启动完成，监控 %zu 个目录。右键托盘图标查看选项。", dirs.size());
